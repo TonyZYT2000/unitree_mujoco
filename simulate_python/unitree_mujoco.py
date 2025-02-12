@@ -12,10 +12,12 @@ import config
 
 locker = threading.Lock()
 
+# initialize model
 mj_model = mujoco.MjModel.from_xml_path(config.ROBOT_SCENE)
 mj_data = mujoco.MjData(mj_model)
 
 
+# create a elastic band pulling robot if enable elastic band
 if config.ENABLE_ELASTIC_BAND:
     elastic_band = ElasticBand()
     if config.ROBOT == "h1" or config.ROBOT == "g1":

@@ -219,6 +219,13 @@ class UnitreeSdk2Bridge:
                 self.low_state.wireless_remote[8:12] = packs[1]
                 self.low_state.wireless_remote[12:16] = packs[2]
                 self.low_state.wireless_remote[20:24] = packs[3]
+            else:
+                self.low_state.wireless_remote[2] = 2
+                self.low_state.wireless_remote[3] = 1
+                self.low_state.wireless_remote[4:8] = b'\x00\x00\x81;'
+                self.low_state.wireless_remote[8:12] = b'\x00\x00\xba;'
+                self.low_state.wireless_remote[12:16] = b'\x00\x00\x80?'
+                self.low_state.wireless_remote[20:24] = b'\x00\x00\xd2<'
 
             self.low_state_puber.Write(self.low_state)
 
@@ -289,8 +296,14 @@ class UnitreeSdk2Bridge:
             self.wireless_controller.ly = -self.joystick.get_axis(self.axis_id["LY"])
             self.wireless_controller.rx = self.joystick.get_axis(self.axis_id["RX"])
             self.wireless_controller.ry = -self.joystick.get_axis(self.axis_id["RY"])
+        else:
+            self.wireless_controller.keys = 258
+            self.wireless_controller.lx = 0
+            self.wireless_controller.ly = 0
+            self.wireless_controller.rx = 0
+            self.wireless_controller.ry = 1
 
-            self.wireless_controller_puber.Write(self.wireless_controller)
+        self.wireless_controller_puber.Write(self.wireless_controller)
 
     def SetupJoystick(self, device_id=0, js_type="xbox"):
         pygame.init()
@@ -301,7 +314,7 @@ class UnitreeSdk2Bridge:
             self.joystick.init()
         else:
             print("No gamepad detected.")
-            sys.exit()
+            # sys.exit()
 
         if js_type == "xbox":
             self.axis_id = {
